@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <RollingFile name="FILE" fileName="log/api_rest.log" filePattern="log/api_rest.%i.log.gz"
+                     ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="32MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="32"/>
+        </RollingFile>
+
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+
+        <Async name="async">
+            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="STDOUT"/>
+        </Async>
+
+        <!--        <JDBC name="JDBC" tableName="logs">
+                    <ConnectionFactory class="com.nirfe.api.repository.ConnectionLog" method="getConnection" />
+                    <Column name="eventDate" isEventTimestamp="true" />
+                    <Column name="level" pattern="%level" />
+                    <Column name="logger" pattern="%logger" />
+                    <Column name="message" pattern="%message" />
+                    <Column name="exception" pattern="%ex{full}" />
+                    <Column name="type" pattern="BACK_END" />
+                </JDBC>-->
+    </Appenders>
+    <Loggers>
+        <!--<Root level="$${env:LOG_LEVEL}">-->
+        <Root level="debug">
+            <AppenderRef ref="async"/>
+            <!--<AppenderRef ref="JDBC" />-->
+        </Root>
+
+    </Loggers>
+</Configuration>
