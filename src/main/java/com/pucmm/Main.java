@@ -24,7 +24,7 @@ public class Main {
 
         Javalin.create(config -> {
             config.enableCorsForAllOrigins();
-            config.enableDevLogging();
+            //config.enableDevLogging();
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {

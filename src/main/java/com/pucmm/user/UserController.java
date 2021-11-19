@@ -39,6 +39,7 @@ public class UserController {
             }
     )
     public static void create(Context ctx) {
+        LOG.info("Invoke create...");
         final User user = ctx.bodyAsClass(User.class);
 
         try {
@@ -72,6 +73,7 @@ public class UserController {
             }
     )
     public static void getAll(Context ctx) {
+        LOG.info("Invoke getAll...");
         try {
             ctx.json(UserService.getInstance().queryForAll());
         } catch (SQLException e) {
@@ -96,6 +98,7 @@ public class UserController {
             }
     )
     public static void getOne(Context ctx) {
+        LOG.info("Invoke getOne...");
         try {
             final User user = UserService.getInstance().queryForId(validPathParamUserId(ctx));
             if (user == null) {
@@ -128,24 +131,25 @@ public class UserController {
             }
     )
     public static void update(Context ctx) {
+        LOG.info("Invoke update...");
         final User user = ctx.bodyAsClass(User.class);
 
         try {
-                final User exist = UserService.getInstance().queryForId(user.getUid());
-                if (exist == null) {
-                    throw new NotFoundResponse("Not found!");
+            final User exist = UserService.getInstance().queryForId(user.getUid());
+            if (exist == null) {
+                throw new NotFoundResponse("Not found!");
 
-                } else {
-                    user.setPassword(exist.getPassword());
-                    UserService.getInstance().update(user);
-                    ctx.json(user);
-                    ctx.status(204);
-                }
+            } else {
+                user.setPassword(exist.getPassword());
+                UserService.getInstance().update(user);
+                ctx.json(user);
+                ctx.status(204);
+            }
 
         } catch (SQLException e) {
             AtomicInteger errorCode = new AtomicInteger(500);
             e.iterator().forEachRemaining(err -> {
-                if(err instanceof SQLIntegrityConstraintViolationException){
+                if (err instanceof SQLIntegrityConstraintViolationException) {
                     ctx.json(Json.pretty("This email is registered"));
                     errorCode.set(409);
                 }
@@ -171,6 +175,7 @@ public class UserController {
             }
     )
     public static void changePassword(Context ctx) {
+        LOG.info("Invoke changePassword...");
         final AuthUser auth = ctx.bodyAsClass(AuthUser.class);
 
         try {
@@ -204,6 +209,7 @@ public class UserController {
             }
     )
     public static void login(Context ctx) {
+        LOG.info("Invoke login...");
         final AuthUser auth = ctx.bodyAsClass(AuthUser.class);
 
         try {
@@ -236,6 +242,7 @@ public class UserController {
             }
     )
     public static void delete(Context ctx) {
+        LOG.info("Invoke delete...");
         try {
             final User user = UserService.getInstance().queryForId(validPathParamUserId(ctx));
             if (user == null) {
@@ -255,7 +262,7 @@ public class UserController {
         return ctx.pathParamAsClass("userId", Integer.class).check(id -> id > 0, "ID must be greater than 0").get();
     }
 
-    public static String convertMD5(String s) {
+    private static String convertMD5(String s) {
 
         String md5 = null;
         try {
