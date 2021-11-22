@@ -20,11 +20,11 @@ public final class JdbcUtil {
     public static void initialize() {
         try {
             JdbcParameter pConnection = new JdbcParameter();
-            //pConnection.setUrl("jdbc:mysql://127.0.0.1:3306/test");
-            pConnection.setUrl("jdbc:mysql://127.0.0.1:3306/sakila");
+            pConnection.setUrl("jdbc:mysql://127.0.0.1:3306/test");
+            //pConnection.setUrl("jdbc:mysql://127.0.0.1:3306/sakila");
             pConnection.setUser("root");
-            pConnection.setPassword("0410");
-            //pConnection.setPassword("04118910");
+            //pConnection.setPassword("0410");
+            pConnection.setPassword("04118910");
             JdbcManager.loadClassDriver("com.mysql.cj.jdbc.Driver");
             JdbcManager.put(pConnection);
         } catch (ClassNotFoundException e) {

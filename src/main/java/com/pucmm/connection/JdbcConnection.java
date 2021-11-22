@@ -2,17 +2,18 @@ package com.pucmm.connection;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- *
  * @author Fred Pena <fantpena@gmail.com>
  */
-public class JdbcConnection {
+public class JdbcConnection implements Closeable {
 
     private static final Logger LOG = LogManager.getLogger(JdbcConnection.class.getName());
 
@@ -35,7 +36,7 @@ public class JdbcConnection {
 
             LOG.info("Successfully loaded driver!");
 
-            connection = new JdbcConnectionSource(parameter.getUrl(),parameter.getUser(),parameter.getPassword());
+            connection = new JdbcConnectionSource(parameter.getUrl(), parameter.getUser(), parameter.getPassword());
 
             LOG.info("Connection Established Successfully!");
 
@@ -46,13 +47,13 @@ public class JdbcConnection {
     }
 
     public ConnectionSource getConnection() {
-        if (!isConected()) {
-            reconnet();
+        if (!isConnected()) {
+            connected();
         }
         return connection;
     }
 
-    private void reconnet() {
+    private void connected() {
         try {
             createConnection();
         } catch (Exception ex) {
@@ -60,11 +61,16 @@ public class JdbcConnection {
         }
     }
 
-    private boolean isConected() {
+    private boolean isConnected() {
         if (connection == null) {
             return false;
         }
-        return connection.isOpen(null);
+        try {
+            DatabaseConnection databaseConnection = connection.getReadOnlyConnection("user");
+            return !databaseConnection.isClosed();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public void close() {

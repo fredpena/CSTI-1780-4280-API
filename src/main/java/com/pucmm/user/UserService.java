@@ -18,10 +18,7 @@ public class UserService extends JdbcStatement<User, Integer> {
 
 
     public static UserService getInstance() {
-        if (sIntance == null) {
-            sIntance = new UserService();
-        }
-        return sIntance;
+        return new UserService();
     }
 
     private UserService() {
